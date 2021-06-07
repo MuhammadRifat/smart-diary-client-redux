@@ -1,10 +1,8 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
-import { userContext } from '../../App';
 
-const PostForm = ({handleLoad}) => {
+const PostForm = ({loggedUser, handleLoad}) => {
     const [postData, setPostData] = useState({});
-    const [loggedInUser, setLoggedInUser] = useContext(userContext);
 
     const handleImageUpload = (event) => {
         const imageData = new FormData();
@@ -33,8 +31,8 @@ const PostForm = ({handleLoad}) => {
         e.preventDefault();
         const newData = {
             ...postData, 
-            name: loggedInUser.name, 
-            email: loggedInUser.email,
+            name: loggedUser.name, 
+            email: loggedUser.email,
             likes: 0, 
             date: new Date()
         }

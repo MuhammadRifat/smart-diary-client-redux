@@ -6,13 +6,17 @@ import './Login.css';
 import { firebaseConfigFrameWork, handleFbSignIn, handleGoogleSignIn, handleLogIn, handleSignUp } from './LoginManager';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebook, faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { addLoginData } from '../../redux/actions/loginAction';
+import { connect } from 'react-redux';
 
-const Login = () => {
+const Login = (props) => {
+    console.log(props);
+    const {loggedUser, addLoginData} = props;
      // access firebase config
      firebaseConfigFrameWork();
      const [newUser, setNewUser] = useState(false);
      const [spinner, setSpinner] = useState(false);
-     const [loggedInUser, setLoggedInUser] = useContext(userContext);
+     const [loggedInUser, setLoggedInUser] = useState({});
      const [user, setUser] = useState({
          name: '',
          email: '',
@@ -144,6 +148,7 @@ const Login = () => {
              success: true
          }
          setLoggedInUser(newUser);
+         addLoginData(newUser);
          isReplace && history.replace(from);
      }
  
@@ -198,11 +203,22 @@ const Login = () => {
                             <button onClick={googleSignIn}><FontAwesomeIcon icon={faGoogle} size="lg" /> Continue With Google</button><br />
                             <button onClick={fbSignIn}><FontAwesomeIcon icon={faFacebook} size="lg" /> Continue With Facebook</button>
                         </div>
-
                     </Col>
                 </Row>
             </Container>
     );
 };
 
-export default Login;
+const mapStateToProps = state => {
+    return {
+        loggedUser: state.loggedUser
+    }
+}
+
+const mapDispatchToProps = {
+    addLoginData: addLoginData
+}
+
+// const connectToStore = connect(mapStateToProps, mapDispatchToProps);
+// connectToStore(Shop);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

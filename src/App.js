@@ -1,4 +1,5 @@
-import React, { createContext, useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,30 +10,37 @@ import Header from './components/Header/Header';
 import Home from './components/Home/Home';
 import Login from './components/Login/Login';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import { addLoginData } from './redux/actions/loginAction';
 
-export const userContext = createContext();
-
-function App() {
-  const [loggedInUser, setLoggedInUser] = useState({});
+function App(props) {
+  const {loggedUser} = props;
 
   return (
-    <userContext.Provider value={[loggedInUser, setLoggedInUser]}>
       <Router>
         <Header></Header>
         <Switch>
           <Route path="/login">
             <Login></Login>
           </Route>
-          <PrivateRoute path="/home">
-            <Home></Home>
+          <PrivateRoute loggedUser={loggedUser} path="/home">
+            <Home loggedUser={loggedUser}></Home>
           </PrivateRoute>
-          <PrivateRoute exact path="/">
-            <Home></Home>
+          <PrivateRoute loggedUser={loggedUser} exact path="/">
+            <Home loggedUser={loggedUser}></Home>
           </PrivateRoute>
         </Switch>
       </Router>
-    </userContext.Provider>
   );
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+      loggedUser: state.loggedUser
+  }
+}
+
+const mapDispatchToProps = {
+  addLoginData: addLoginData
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -1,24 +1,26 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Col, Container, Row, Spinner } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import { userContext } from '../../App';
+import { addLoginData } from '../../redux/actions/loginAction';
 import PostForm from '../PostForm/PostForm';
 import Posts from '../Posts/Posts';
 import StatusModal from '../StatusModal/StatusModal';
 
-const Home = () => {
+const Home = (props) => {
+    const {loggedUser} = props;
     const [posts, setPosts] = useState([]);
     const [spinner, setSpinner] = useState(false);
     const [isPostUpload, setIsPostUpload] = useState(false);
     const [modalShow, setModalShow] = useState(false);
     const [modalData, setModalData] = useState({});
-    const [loggedInUser, setLoggedInUser] = useContext(userContext);
 
     useEffect(() => {
         setSpinner(true);
         fetch('https://fierce-headland-67117.herokuapp.com/allPosts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: loggedInUser.email })
+            body: JSON.stringify({ email: loggedUser.email })
         })
             .then(res => res.json())
             .then(data => {
@@ -47,10 +49,9 @@ const Home = () => {
         })
             .then(res => res.json())
             .then(data => {
-                // console.log(data);
+                console.log(data);
             })
     }
-    console.log(posts);
     return (
         <Container>
             <StatusModal
@@ -75,7 +76,7 @@ const Home = () => {
                 </Col>
                 <Col md={4}>
                     <h5>Creating a Memory</h5>
-                    <PostForm handleLoad={handleLoad}></PostForm>
+                    <PostForm loggedUser={loggedUser} handleLoad={handleLoad}></PostForm>
                 </Col>
             </Row>
         </Container>
