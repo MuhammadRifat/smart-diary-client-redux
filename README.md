@@ -4,7 +4,7 @@
 https://github.com/MuhammadRifat/smart-diary-server
 
 ## Website Link
-https://smart-diary-simple.web.app/login
+https://smart-diary-simple.web.app/
 
 ## Features
 1. Login/Registration
